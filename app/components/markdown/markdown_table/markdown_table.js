@@ -5,6 +5,7 @@ import {PropTypes} from 'prop-types';
 import React from 'react';
 import {intlShape} from 'react-intl';
 import {
+    Dimensions,
     ScrollView,
     View,
 } from 'react-native';
@@ -16,6 +17,7 @@ import TouchableWithFeedback from 'app/components/touchable_with_feedback';
 import {preventDoubleTap} from 'app/utils/tap';
 import {changeOpacity, makeStyleSheetFromTheme} from 'app/utils/theme';
 import {goToScreen} from 'app/actions/navigation';
+import {DeviceTypes} from 'app/constants';
 
 const MAX_HEIGHT = 352;
 
@@ -24,8 +26,6 @@ export default class MarkdownTable extends React.PureComponent {
         children: PropTypes.node.isRequired,
         numColumns: PropTypes.number.isRequired,
         theme: PropTypes.object.isRequired,
-        isTablet: PropTypes.bool.isRequired,
-        isLandscape: PropTypes.bool.isRequired,
     };
 
     static contextTypes = {
@@ -74,17 +74,19 @@ export default class MarkdownTable extends React.PureComponent {
     };
 
     shouldRenderAsFlex = (isFullView = false) => {
-        const {numColumns, isTablet, isLandscape} = this.props;
+        const {numColumns} = this.props;
+        const {height, width} = Dimensions.get('window');
+        const isLandscape = width > height;
 
         // render as flex in the channel screen, only for mobile phones on the portrait mode,
         // and if tables have 2 ~ 4 columns
-        if (!isFullView && numColumns > 1 && numColumns <= 4 && !isTablet && !isLandscape) {
+        if (!isFullView && numColumns > 1 && numColumns <= 4 && !DeviceTypes.IS_TABLET && !isLandscape) {
             return true;
         }
 
         // render as flex in full table screen, only for mobile phones on portrait mode,
         // and if tables have 3 or 4 columns
-        if (isFullView && numColumns >= 3 && numColumns <= 4 && !isTablet && !isLandscape) {
+        if (isFullView && numColumns >= 3 && numColumns <= 4 && !DeviceTypes.IS_TABLET && !isLandscape) {
             return true;
         }
 
