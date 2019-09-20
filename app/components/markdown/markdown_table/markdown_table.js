@@ -67,7 +67,7 @@ export default class MarkdownTable extends React.PureComponent {
         });
     };
 
-    handleContentSizeChange = (_containerHeight, contentHeight) => {
+    handleContentSizeChange = (contentWidth, contentHeight) => {
         this.setState({
             contentHeight,
         });
@@ -100,7 +100,7 @@ export default class MarkdownTable extends React.PureComponent {
 
         const renderAsFlex = this.shouldRenderAsFlex(isFullView);
         if (renderAsFlex) {
-            tableStyle.push({flex: 1});
+            tableStyle.push(style.displayFlex);
             return tableStyle;
         }
 
@@ -152,7 +152,7 @@ export default class MarkdownTable extends React.PureComponent {
                         changeOpacity(this.props.theme.centerChannelColor, 0.0),
                         changeOpacity(this.props.theme.centerChannelColor, 0.1),
                     ]}
-                    style={[style.moreBelow, {width: renderAsFlex ? '100%' : tableWidth}]}
+                    style={[style.moreBelow, renderAsFlex ? style.fullWidth : {width: tableWidth}]}
                 />
             );
         }
@@ -176,7 +176,6 @@ export default class MarkdownTable extends React.PureComponent {
                 type={'opacity'}
             >
                 <ScrollView
-                    contentContainerStyle={{width: '100%'}}
                     onContentSizeChange={this.handleContentSizeChange}
                     onLayout={this.handleContainerLayout}
                     scrollEnabled={false}
@@ -212,6 +211,12 @@ const getStyleSheet = makeStyleSheetFromTheme((theme) => {
         icon: {
             fontSize: 15,
             color: theme.linkColor,
+        },
+        displayFlex: {
+            flex: 1,
+        },
+        fullWidth: {
+            width: '100%',
         },
         table: {
             borderColor: changeOpacity(theme.centerChannelColor, 0.2),
